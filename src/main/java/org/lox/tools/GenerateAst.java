@@ -13,6 +13,8 @@ public class GenerateAst {
             System.exit(1);
         }
         String outputDir = args[0];
+
+        System.out.println("Generating Expression AST classes ...");
         defineAst(outputDir, "Expr", Arrays.asList(
                 "Assign   : Token name, Expr value",
                 "Binary   : Expr left, Token operator, Expr right",
@@ -21,7 +23,10 @@ public class GenerateAst {
                 "Unary    : Token operator, Expr right",
                 "Variable : Token name"
         ));
+
+        System.out.println("Generating Statement AST classes ...");
         defineAst(outputDir, "Stmt", Arrays.asList(
+                "Block      : List<Stmt> statements",
                 "Expression : Expr expression",
                 "Print      : Expr expression",
                 "Var        : Token name, Expr initializer"
