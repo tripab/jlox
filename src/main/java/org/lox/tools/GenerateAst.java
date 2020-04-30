@@ -13,6 +13,7 @@ public class GenerateAst {
             System.exit(1);
         }
         String outputDir = args[0];
+        System.out.println("Output directory = " + outputDir);
 
         System.out.println("Generating Expression AST classes ...");
         defineAst(outputDir, "Expr", Arrays.asList(
@@ -20,6 +21,7 @@ public class GenerateAst {
                 "Binary   : Expr left, Token operator, Expr right",
                 "Grouping : Expr expression",
                 "Literal  : Object value",
+                "Logical  : Expr left, Token operator, Expr right",
                 "Unary    : Token operator, Expr right",
                 "Variable : Token name"
         ));
@@ -49,6 +51,7 @@ public class GenerateAst {
 
         // The AST classes
         for (String type : types) {
+            System.out.println("Defining " + type + " in the file " + path);
             String[] classInformation = type.split(":");
             String className = classInformation[0].trim();
             String fields = classInformation[1].trim();
@@ -67,6 +70,7 @@ public class GenerateAst {
         writer.println("    interface Visitor<R> {");
 
         for (String type : types) {
+            System.out.println("Defining visitor " + type + " in the class " + baseName);
             String typeName = type.split(":")[0].trim();
             writer.println("        R visit" + typeName + baseName + "(" +
                     typeName + " " + baseName.toLowerCase() + ");");
