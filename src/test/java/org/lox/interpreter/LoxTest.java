@@ -14,4 +14,10 @@ public class LoxTest {
         Lox.main(new String[]{"src/test/resources/scopes.lox"});
     }
 
+    @Test
+    public void testForLoopOnFibonnaciSequence() throws IOException {
+        // TODO: capture the output of the Lox script, so that we can assert its correctness
+        Lox.main(new String[]{"src/test/resources/fibonacci.lox"});
+    }
+
 }

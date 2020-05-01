@@ -1,6 +1,7 @@
 package org.lox.interpreter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.lox.interpreter.TokenType.*;
@@ -47,14 +48,62 @@ public class Parser {
     }
 
     private Stmt statement() {
+        if (match(FOR))
+            return forStatement();
         if (match(IF))
             return ifStatement();
         if (match(PRINT))
             return printStatement();
+        if (match(WHILE))
+            return whileStatement();
         if (match(LEFT_BRACE))
             return new Stmt.Block(block());
 
         return expressionStatement();
+    }
+
+    private Stmt forStatement() {
+        consume(LEFT_PAREN, "Expect '(' after 'for'.");
+
+        Stmt initializer = null;
+        if (!match(SEMICOLON)) {
+            if (match(VAR)) {
+                initializer = varDeclaration();
+            } else {
+                initializer = expressionStatement();
+            }
+        }
+
+        Expr condition = null;
+        if (!match(SEMICOLON))
+            condition = expression();
+        consume(SEMICOLON, "Expect ';' after loop condition.");
+
+        Expr increment = null;
+        if (!match(SEMICOLON))
+            increment = expression();
+        consume(SEMICOLON, "Expect ')' after for clauses.");
+
+        Stmt body = statement();
+        if (increment != null) {
+            body = new Stmt.Block(Arrays.asList(body, new Stmt.Expression(increment)));
+        }
+        if (condition == null)
+            condition = new Expr.Literal(true);
+        body = new Stmt.While(condition, body);
+        if (initializer != null)
+            body = new Stmt.Block(Arrays.asList(initializer, body));
+
+        return body;
+    }
+
+    private Stmt whileStatement() {
+        consume(LEFT_PAREN, "Expect '(' after 'while'.");
+        Expr condition = expression();
+        consume(RIGHT_PAREN, "Expect ')' after condition.");
+        Stmt body = statement();
+
+        return new Stmt.While(condition, body);
     }
 
     private Stmt ifStatement() {
