@@ -49,4 +49,12 @@ public class LoxTest {
         System.out.println("");
     }
 
+    @Test
+    public void testClosureScopeFix() throws IOException {
+        // TODO: capture the output of the Lox script, so that we can assert its correctness
+        System.out.println("testClosureScopeFix");
+        Lox.main(new String[]{"src/test/resources/closures_scope_fix.lox"});
+        System.out.println("");
+    }
+
 }
